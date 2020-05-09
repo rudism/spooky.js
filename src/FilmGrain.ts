@@ -16,6 +16,8 @@ export class FilmGrain {
   private grainScaleY: number;
   private refreshInterval: number;
   private alpha: number;
+  private targetAlpha: number;
+  private targetStep: number = 0;
   private canvasId?: string;
   private patternPixelDataLength: number;
 
@@ -29,13 +31,14 @@ export class FilmGrain {
   private patternData?: ImageData;
 
   private frame: number = 0;
+  private active: boolean = false;
 
   constructor(options?: FilmGrainOptions) {
     this.patternSize = options?.patternSize || 64;
     this.grainScaleX = options?.grainScale?.x || 3;
     this.grainScaleY = options?.grainScale?.y || 1;
     this.refreshInterval = options?.refreshInterval || 4;
-    this.alpha = options?.alpha || 25;
+    this.alpha = this.targetAlpha = options?.alpha == null ? 25 : options.alpha;
     this.canvasId = options?.canvasId;
     this.patternPixelDataLength = this.patternSize * this.patternSize * 4;
   }
@@ -79,6 +82,16 @@ export class FilmGrain {
   }
 
   private update(): void {
+    // handle alpha animations
+    if (Math.abs(this.targetAlpha - this.alpha) > this.targetStep) {
+      if (this.targetAlpha < this.alpha) {
+        this.alpha -= this.targetStep;
+      } else {
+        this.alpha += this.targetStep;
+      }
+    } else if (this.alpha !== this.targetAlpha) {
+      this.alpha = this.targetAlpha;
+    }
     // put a random shade of gray into every pixel of the pattern
     if (this.patternData && this.patternContext) {
       for (let i = 0; i < this.patternPixelDataLength; i += 4) {
@@ -101,16 +114,39 @@ export class FilmGrain {
   }
 
   private loop(): void {
-    if (++(this.frame) % this.refreshInterval === 0) {
-      this.update();
-      this.draw();
+    if (this.active) {
+      if (++(this.frame) % this.refreshInterval === 0) {
+        this.update();
+        this.draw();
+      }
+      requestAnimationFrame(() => this.loop());
     }
-    requestAnimationFrame(() => this.loop());
   }
 
   public execute(): void {
-    this.initCanvas();
-    this.initGrain();
-    requestAnimationFrame(() => this.loop());
+    if (!this.active) {
+      this.active = true;
+      this.initCanvas();
+      this.initGrain();
+      requestAnimationFrame(() => this.loop());
+    }
+  }
+
+  public setAlpha(alpha: number, step: number = 5): void {
+    this.targetAlpha = alpha;
+    this.targetStep = step;
+  }
+
+  public stop(): void {
+    this.active = false;
+    if (!this.canvasId && this.canvas) {
+      // if we created the original canvas, just remove it
+      this.canvas.remove();
+    } else {
+      if (this.context) {
+        // otherwise clear it out
+        this.context.clearRect(0, 0, this.viewWidth, this.viewHeight);
+      }
+    }
   }
 }
