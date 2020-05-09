@@ -1,1 +1,3 @@
-module.exports = require('./Spooky.js').Spooky;
+module.exports = {
+  FilmGrain: require('./FilmGrain.js').FilmGrain,
+}
