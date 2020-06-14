@@ -48,7 +48,7 @@ export class CRT implements IEffect {
       #${this.wrapperId} {
         position: relative;
       }
-      #${this.containerId}::before {
+      #${this.wrapperId} > #${this.containerId}::before {
         content: " ";
         display: block;
         position: absolute;
@@ -70,7 +70,7 @@ export class CRT implements IEffect {
         pointer-events: none;
       }
       ${this.makeFlickerFrames()}
-      #${this.containerId}::after {
+      #${this.wrapperId} > #${this.containerId}::after {
         content: " ";
         display: block;
         position: absolute;
@@ -85,7 +85,7 @@ export class CRT implements IEffect {
         animation: flicker_${this.styleId} 0.15s infinite;
       }
       ${this.makeSeparationFrames()}
-      #${this.containerId} {
+      #${this.wrapperId} > #${this.containerId} {
         animation: separation_${this.styleId} 1.6s infinite;
       }
     `).appendTo($('body'));
@@ -111,10 +111,14 @@ export class CRT implements IEffect {
   }
 
   public execute(): void {
-    $(`#${this.containerId}`).wrap($('<div />').attr('id', this.wrapperId));
+    if(!$(`#${this.wrapperId}`).length) {
+      $(`#${this.containerId}`).wrap($('<div />').attr('id', this.wrapperId));
+    }
   }
 
   public stop(): void {
-    $(`#${this.containerId}`).unwrap(`#${this.wrapperId}`);
+    if($(`#${this.wrapperId}`).length) {
+      $(`#${this.containerId}`).unwrap(`#${this.wrapperId}`);
+    }
   }
 }

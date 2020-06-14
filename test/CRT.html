@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang='en'>
+<head>
+  <title>CRT Test</title>
+  <meta charset='utf-8'>
+  <script src='../build/spooky.min.js'></script>
+  <script>
+    var crt;
+    document.addEventListener("DOMContentLoaded", function(event) {
+      crt = new Spooky.CRT({
+        containerId: 'crt',
+        screenDoorColor: '#040',
+        screenDoorSize: 4,
+        screenDoorOpacity: 0.5,
+        separationColor: '#ff0',
+        separationBlur: 3,
+        separationDistance: 8,
+        separationOpacity: 0.25
+      });
+    });
+  </script>
+  <style>
+    #crt {
+      padding: 2em;
+      background-color: #020;
+      color: #0f0;
+      font-family: monospace;
+      font-size: 3em;
+    }
+  </style>
+</head>
+<body>
+  <div id='crt'>
+    This is an old CRT monitor.
+  </div>
+  <button onclick='crt.execute()'>Start</button>
+  <button onclick='crt.stop()'>Stop</button>
+</body>
+</html>
