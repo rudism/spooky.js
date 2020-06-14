@@ -1,6 +1,7 @@
 // credit: https://codepen.io/zadvorsky/pen/PwyoMm
 
 import * as $ from 'jquery';
+import { IEffect } from './IEffect';
 
 export interface FilmGrainOptions {
   patternSize?: number;
@@ -10,7 +11,7 @@ export interface FilmGrainOptions {
   canvasId?: string;
 }
 
-export class FilmGrain {
+export class FilmGrain implements IEffect {
   private patternSize: number;
   private grainScaleX: number;
   private grainScaleY: number;

@@ -1,23 +1,25 @@
 {
   "name": "spooky.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Javascript/CSS effects to make a website spooky.",
   "scripts": {
     "build": "rm -rf ./build && tsc",
     "pack": "browserify build/unpacked/main.js --standalone Spooky > ./build/spooky.js",
-    "minify": "uglifyjs build/spooky.js > build/spooky.min.js",
+    "minify": "terser --compress -- build/spooky.js > build/spooky.min.js",
     "make": "npm run build && npm run pack && npm run minify"
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "jquery": "^3.5.1"
+    "jquery": "^3.5.1",
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
     "@types/core-js": "^2.5.3",
     "@types/jquery": "^3.3.38",
     "@types/node": "^13.13.5",
+    "@types/uuid": "^8.0.0",
     "browserify": "^16.5.1",
-    "typescript": "^3.8.3",
-    "uglify-js": "^3.9.2"
+    "terser": "^4.7.0",
+    "typescript": "^3.8.3"
   }
 }
