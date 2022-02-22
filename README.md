@@ -1,3 +1,5 @@
+**Note:** Active development of Spooky.js has moved to https://code.sitosis.com/rudism/spooky.js
+
 # spooky.js
 
 ## Available Effects
